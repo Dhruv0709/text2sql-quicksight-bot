@@ -16,17 +16,18 @@ st.caption("Ask natural language questions to query your Snowflake tables direct
 
 @st.cache_resource
 def get_snowflake_conn():
-    user = os.getenv("SNOWFLAKE_USER")
-    password = os.getenv("SNOWFLAKE_PASSWORD")
-    account = os.getenv("SNOWFLAKE_ACCOUNT")
-    warehouse = os.getenv("SNOWFLAKE_WAREHOUSE", "COMPUTE_WH")
-    database = os.getenv("SNOWFLAKE_DATABASE", "QUICKSIGHT")
-    schema = os.getenv("SNOWFLAKE_SCHEMA", "GENIE")
+    user = st.secrets["SNOWFLAKE_USER"]
+    password = st.secrets["SNOWFLAKE_PASSWORD"]
+    account = st.secrets["SNOWFLAKE_ACCOUNT"]
+    warehouse = st.secrets.get("SNOWFLAKE_WAREHOUSE", "COMPUTE_WH")
+    database = st.secrets.get("SNOWFLAKE_DATABASE", "QUICKSIGHT")
+    schema = st.secrets.get("SNOWFLAKE_SCHEMA", "GENIE")
 
     return snowflake.connector.connect(
         user=user,
         password=password,
         account=account,
+        host="fjbhcos-fe80032.snowflakecomputing.com",
         warehouse=warehouse,
         database=database,
         schema=schema
