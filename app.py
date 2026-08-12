@@ -113,35 +113,19 @@ if user_input:
             st.stop()
 
     # ---------------------------------------------------------
-    # 6. Data Display & Interactive Visualization
+    # 6. Data Display Output
     # ---------------------------------------------------------
     if not df.empty:
         st.subheader("📋 Query Results")
         st.dataframe(df, use_container_width=True)
-
-        st.markdown("---")
-        st.subheader("📊 Data Visualization")
-
-        all_cols = df.columns.tolist()
-        num_cols = df.select_dtypes(include=['number']).columns.tolist()
-
-        c1, c2, c3 = st.columns(3)
-        with c1:
-            x_axis = st.selectbox("Select X-Axis (Category/Date)", options=all_cols, index=0)
-        with c2:
-            y_default_idx = all_cols.index(num_cols[0]) if num_cols else (1 if len(all_cols) > 1 else 0)
-            y_axis = st.selectbox("Select Y-Axis (Metric)", options=all_cols, index=y_default_idx)
-        with c3:
-            chart_kind = st.selectbox("Select Chart Type", options=["Bar Chart", "Line Chart", "Area Chart"])
-
-        # Prepare chart dataframe
-        chart_data = df.set_index(x_axis)[[y_axis]]
-
-        if chart_kind == "Bar Chart":
-            st.bar_chart(chart_data)
-        elif chart_kind == "Line Chart":
-            st.line_chart(chart_data)
-        elif chart_kind == "Area Chart":
-            st.area_chart(chart_data)
+        
+        # Download button for data export
+        csv_data = df.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label="📥 Download Data as CSV",
+            data=csv_data,
+            file_name="query_results.csv",
+            mime="text/csv"
+        )
     else:
         st.warning("Query executed successfully, but returned 0 rows.")
