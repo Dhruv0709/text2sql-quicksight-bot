@@ -15,7 +15,7 @@ st.caption("Ask natural language questions to query your Snowflake tables direct
 # ---------------------------------------------------------
 # 2. Snowflake Connection Setup
 # ---------------------------------------------------------
-@st.cache_resource
+@st.cache_resource(ttl=3600)
 def get_snowflake_conn():
     user = st.secrets["SNOWFLAKE_USER"]
     password = st.secrets["SNOWFLAKE_PASSWORD"]
@@ -31,9 +31,9 @@ def get_snowflake_conn():
         host="fjbhcos-fe80032.snowflakecomputing.com",
         warehouse=warehouse,
         database=database,
-        schema=schema
+        schema=schema,
+        client_session_keep_alive=True
     )
-
 try:
     conn = get_snowflake_conn()
     st.success("Connected to Snowflake successfully!")
